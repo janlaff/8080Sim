@@ -68,6 +68,7 @@ namespace i8080 {
             t_default(cpu.byteNullReg); // Dummy value
         }();
 
+        // Instruction implementations
         t("IiIiIgICICL////////9/wAAAAAAAAAAAAAAAAAAAAA") {
             resultByte = operandByte;
         } // MOV B8, B8 // 02 06 0a 0e 12 16 1a 1e 26 2e 32 3a 3e 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 77 78 79 7a 7b 7c 7d 7e 7f
@@ -75,13 +76,17 @@ namespace i8080 {
             resultWord = operandWord;
         } // LXI B16, D16 // 01 11 21 31
 
-        /*// Increment pc
-        auto inc = [&]() constexpr -> uint16_t {
+        t("CAgICAgICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
+            resultByte = resultByte + 1;
+        } // INR B8 // 04 0c 14 1c 24 2c 34 3c
+
+        // Increment pc
+        auto inc = [&]() constexpr -> Word {
             t_ret("AgICAgICAgIAAAAAAAAAAAAAAAAAAAAAAgISEgICAgI", 2u); // 06 0e 16 1e 26 2e 36 3e c6 ce d3 d6 db de e6 ee f6 fe
-            t_ret("", 3u); // 01 11 21 31 22 32 2a 3a c2 d2 e2 f2 c3 
+            t_ret("QABAAGAgYCAAAAAAAAAAAAAAAAAAAAAAODwoLCgsKCw", 3u); // 01 11 21 22 2a 31 32 3a c2 c3 c4 ca cb cc cd d2 d4 da dc dd e2 e4 ea ec ed f2 f4 fa fc fd
             t_default(1u);
         }();
-        //cpu.pc() = cpu.pc() + inc;*/
+        cpu.pc() = cpu.pc() + inc;
 
         // Return cpu cycles
         t_ret("gIGAgYCBgIAAAQAAAAAAAP39/f39/f39AAAAAAAAEBA", 4);  // 00 08 0f 10 18 1f 20 28 2f 30 38 4f 80 81 82 83 84 85 87 88 89 8a 8b 8c 8d 8f 90 91 92 93 94 95 97 98 99 9a 9b 9c 9d 9f a0 a1 a2 a3 a4 a5 a7 a8 a9 aa ab ac ad af b0 b1 b2 b3 b4 b5 b7 b8 b9 ba bb bc bd bf f3 fb
