@@ -65,6 +65,10 @@ namespace i8080 {
         return instructions[opcode](*this);
     }
 
+    CpuFlags& Cpu::getFlags() {
+        return m_flags;
+    }
+
     Byte& Cpu::byte(Address addr) {
         return m_mem[addr];
     }
@@ -78,7 +82,7 @@ namespace i8080 {
     }
 
     Byte& Cpu::flags() {
-        return m_regs[R_PSW].low;
+        return reinterpret_cast<Byte&>(m_flags);
     }
 
     Byte& Cpu::b() {

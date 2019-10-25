@@ -44,6 +44,9 @@ namespace i8080 {
         void updateFlags(Word value);
         unsigned int execute(Byte opcode);
 
+        // Flags getter/setter
+        CpuFlags& getFlags();
+
         // Mem getter/setter
         Byte& byte(Address addr);
         Word& word(Address addr);

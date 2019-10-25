@@ -49,7 +49,11 @@ namespace i8080 {
 
     template<Byte Opcode>
     constexpr Word& getOperandWord(Cpu& cpu) {
-        t_ret("QABAAEAAQAAAAAAAAAAAAAAAAAAAAAAAOCwoKCgoIAA", cpu.word(cpu.pc())); // D16/adr // 01 11 21 31 c2 c3 c4 ca cc cd d2 d4 da dc e2 e4 ea ec f2
+        t_ret("QABAAEAAQAAAAAAAAAAAAAAAAAAAAAAAOCwoKCgoIAA", cpu.word(cpu.pc() + 1)); // D16/adr // 01 11 21 31 c2 c3 c4 ca cc cd d2 d4 da dc e2 e4 ea ec f2
+        t_ret("AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", cpu.bc()); // BC // 09
+        t_ret("AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", cpu.de()); // DE // 19
+        t_ret("AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", cpu.hl()); // HL // 29
+        t_ret("AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", cpu.sp()); // SP // 39
         t_default(cpu.wordNullReg); // Dummy value
     }
 
@@ -100,13 +104,21 @@ namespace i8080 {
         // Instruction implementations
         t("IiIiIgICICL////////9/wAAAAAAAAAAAAAAAAAAAAA") {
             resultByte = operandByte;
-        } // MOV B8, B8 // 02 06 0a 0e 12 16 1a 1e 26 2e 32 3a 3e 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 77 78 79 7a 7b 7c 7d 7e 7f
+        } // B8 <- B8 // 02 06 0a 0e 12 16 1a 1e 26 2e 32 3a 3e 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 77 78 79 7a 7b 7c 7d 7e 7f
         t("QABAAEAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
             resultWord = operandWord;
-        } // LXI B16, D16 // 01 11 21 31
+        } // B16 <- B16 // 01 11 21 31
         t("CAgICAgICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
             resultByte = resultByte + 1;
-        } // INR B8 // 04 0c 14 1c 24 2c 34 3c
+        } // B8++ // 04 0c 14 1c 24 2c 34 3c
+        t("BAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
+            resultByte = resultByte - 1;
+        } // B8-- // 05 0d 15 1d 25 2d 35 3d
+        t("AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
+            uint16_t tmp = (resultByte << 1 | resultByte >> 7);
+            cpu.getFlags().carry = (resultByte >> 7) & 1;
+            resultByte = tmp;
+        } // RLC // 07
 
         // TODO: implement remaining instructions
 
