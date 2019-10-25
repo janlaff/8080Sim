@@ -101,24 +101,74 @@ namespace i8080 {
         // Operand 8 Bit
         Byte& operandByte = getOperandByte<Opcode>(cpu);
 
-        // Instruction implementations
+        /*
+         * Instruction implementations
+        */
+
+        // 8 bit group
+
+        // B8 <- B8 // 02 06 0a 0e 12 16 1a 1e 26 2e 32 3a 3e 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 77 78 79 7a 7b 7c 7d 7e 7f
         t("IiIiIgICICL////////9/wAAAAAAAAAAAAAAAAAAAAA") {
             resultByte = operandByte;
-        } // B8 <- B8 // 02 06 0a 0e 12 16 1a 1e 26 2e 32 3a 3e 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 77 78 79 7a 7b 7c 7d 7e 7f
-        t("QABAAEAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
-            resultWord = operandWord;
-        } // B16 <- B16 // 01 11 21 31
+        }
+        // B8++ // 04 0c 14 1c 24 2c 34 3c
         t("CAgICAgICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
             resultByte = resultByte + 1;
-        } // B8++ // 04 0c 14 1c 24 2c 34 3c
+        }
+        // B8-- // 05 0d 15 1d 25 2d 35 3d
         t("BAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
             resultByte = resultByte - 1;
-        } // B8-- // 05 0d 15 1d 25 2d 35 3d
+        }
+        // B8 += B8 // 80 81 82 83 84 85 86 87 88 89 8a 8b 8c 8d 8e 8f
+        t("AAAAAAAAAAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAAA") {
+            resultByte = resultByte + operandByte;
+        }
+        // B8 += B8 + |CY| Additions // 88 89 8a 8b 8c 8d 8e 8f
+        t("AAAAAAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAA") {
+            resultByte = resultByte + cpu.getFlags().carry;
+        }
+        // B8 -= B8 // 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 9e 9f
+        t("AAAAAAAAAAAAAAAAAAAAAAAA//8AAAAAAAAAAAAAAAA") {
+            resultByte = resultByte - operandByte;
+        }
+        // B8 -= B8 - |CY| Additions // 98 99 9a 9b 9c 9d 9e 9f
+        t("AAAAAAAAAAAAAAAAAAAAAAAAAP8AAAAAAAAAAAAAAAA") {
+            resultByte = resultByte - cpu.getFlags().carry;
+        }
+
+        // 16 bit group
+
+        // B16 <- B16 // 01 11 21 31
+        t("QABAAEAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
+            resultWord = operandWord;
+        }
+        // B16 += B16 // 09 19 29 39
+        t("AEAAQABAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
+            resultWord = resultWord + operandWord;
+        }
+        // B16++ // 03 13 23 33
+        t("EAAQABAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
+            resultWord = resultWord + 1;
+        }
+        // B16-- // 0b 1b 2b 3b
+        t("ABAAEAAQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
+            resultWord = resultWord - 1;
+        }
+
+        // Bit shifting group
+
+        // RLC // 07
         t("AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
             uint16_t tmp = (resultByte << 1 | resultByte >> 7);
             cpu.getFlags().carry = (resultByte >> 7) & 1;
             resultByte = tmp;
-        } // RLC // 07
+        }
+        // RRC // 0f
+        t("AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") {
+            uint16_t tmp = (resultByte >> 1 | resultByte << 7);
+            cpu.getFlags().carry = (resultByte & 0x1);
+            resultByte = tmp;
+        }
 
         // TODO: implement remaining instructions
 
