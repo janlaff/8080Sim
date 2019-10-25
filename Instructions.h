@@ -55,15 +55,15 @@ namespace i8080 {
 
     template<Byte Opcode>
     constexpr Byte& getOperandByte(Cpu& cpu) {
-        t_ret("AgICAgICAgIAAAAAAAAAAAAAAAAAAAAAAgISEgICAgI", cpu.byte(cpu.pc() + 1)); // D8 // 06 0e 16 1e 26 2e 36 3e c6 ce d3 d6 db de e6 ee f6 fe
-        t_ret("IAAgAAAAIAABAQEBAQEBAQABAQEBAQEBAAAAAAAAAAA", cpu.a()); // A // 02 12 32 47 4f 57 5f 67 6f 77 7f 8f 97 9f a7 af b7 bf
-        t_ret("AAAAAAAAAACAgICAgICAgICAgICAgICAAAAAAAAAAAA", cpu.b()); // B // 40 48 50 58 60 68 70 78 80 88 90 98 a0 a8 b0 b8
-        t_ret("AAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAA", cpu.c()); // C // 41 49 51 59 61 69 71 79 81 89 91 99 a1 a9 b1 b9
-        t_ret("AAAAAAAAAAAgICAgICAgICAgICAgICAgAAAAAAAAAAA", cpu.d()); // D // 42 4a 52 5a 62 6a 72 7a 82 8a 92 9a a2 aa b2 ba
-        t_ret("AAAAAAAAAAAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAA", cpu.e()); // E // 43 4b 53 5b 63 6b 73 7b 83 8b 93 9b a3 ab b3 bb
-        t_ret("AAAAAAAAAAAICAgICAgICAgICAgICAgIAAAAAAAAAAA", cpu.h()); // H // 44 4c 54 5c 64 6c 74 7c 84 8c 94 9c a4 ac b4 bc
-        t_ret("AAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAA", cpu.l()); // L // 45 4d 55 5d 65 6d 75 7d 85 8d 95 9d a5 ad b5 bd
-        t_ret("AAAAAAAAAAACAgICAgICAgICAgICAgICAAAAAAAAAAA", cpu.byte(cpu.hl())); // (HL) // 46 4e 56 5e 66 6e 76 7e 86 8e 96 9e a6 ae b6 be
+        t_ret("AgICAgICAgIAAAAAAAAAAAAAAAAAAAAAAgISEgICAgI", cpu.byte(cpu.pc() + 1)); // D8   // 06 0e 16 1e 26 2e 36 3e c6 ce d3 d6 db de e6 ee f6 fe
+        t_ret("IAAgAAAAIAABAQEBAQEBAQABAQEBAQEBAAAAAAAAAAA", cpu.a());                // A    // 02 12 32 47 4f 57 5f 67 6f 77 7f 8f 97 9f a7 af b7 bf
+        t_ret("AAAAAAAAAACAgICAgICAgICAgICAgICAAAAAAAAAAAA", cpu.b());                // B    // 40 48 50 58 60 68 70 78 80 88 90 98 a0 a8 b0 b8
+        t_ret("AAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAA", cpu.c());                // C    // 41 49 51 59 61 69 71 79 81 89 91 99 a1 a9 b1 b9
+        t_ret("AAAAAAAAAAAgICAgICAgICAgICAgICAgAAAAAAAAAAA", cpu.d());                // D    // 42 4a 52 5a 62 6a 72 7a 82 8a 92 9a a2 aa b2 ba
+        t_ret("AAAAAAAAAAAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAA", cpu.e());                // E    // 43 4b 53 5b 63 6b 73 7b 83 8b 93 9b a3 ab b3 bb
+        t_ret("AAAAAAAAAAAICAgICAgICAgICAgICAgIAAAAAAAAAAA", cpu.h());                // H    // 44 4c 54 5c 64 6c 74 7c 84 8c 94 9c a4 ac b4 bc
+        t_ret("AAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAA", cpu.l());                // L    // 45 4d 55 5d 65 6d 75 7d 85 8d 95 9d a5 ad b5 bd
+        t_ret("AAAAAAAAAAACAgICAgICAgICAgICAgICAAAAAAAAAAA", cpu.byte(cpu.hl()));     // (HL) // 46 4e 56 5e 66 6e 76 7e 86 8e 96 9e a6 ae b6 be
         t_default(cpu.byteNullReg); // Dummy value
     }
 
