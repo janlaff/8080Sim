@@ -21,8 +21,6 @@ struct CPU {
     bool jump_performed;
     bool int_enable;
 
-    // Update flags
-    void update_flags(uint16_t value);
     // Jump
     void jump(uint16_t addr);
     // Read 8 bit parameter

@@ -35,6 +35,29 @@ constexpr void update_stats(CPU& cpu) {
 }
 
 template<uint8_t opcode>
+constexpr void update_flags(CPU& cpu, uint16_t value) {
+    auto parity = [](uint8_t val) constexpr {
+        uint8_t tmp = 0;
+
+        tmp = val ^ (val >> 1);
+        tmp = tmp ^ (tmp >> 2);
+        tmp = tmp ^ (tmp >> 4);
+
+        return tmp & 1;
+    };
+
+    // Update Z, S, P, AC
+    _t() {
+        cpu.flags.sign = (value & 0x80) == 0;
+        cpu.flags.zero = (value & 0xff) == 0;
+        cpu.flags.parity = parity(value);
+        cpu.flags.auxCarry = 0; // TODO
+    }
+    // Update CY
+    _t() cpu.flags.carry = (value > 0xff);
+}
+
+template<uint8_t opcode>
 constexpr uint16_t get_operand(CPU& cpu) {
     _t("") return cpu.read_d8();
     _t("") return cpu.read_d16();
@@ -85,7 +108,7 @@ constexpr bool should_jump(CPU& cpu) {
         else return value;
     };
 
-    // Handles jump if [flag] / jump if not [flag]
+    // Handles jump if (not) flag
     _t("") return negate_if(cpu.flags.sign);
     _t("") return negate_if(cpu.flags.zero);
     _t("") return negate_if(cpu.flags.parity);
@@ -106,17 +129,20 @@ constexpr uint16_t do_logic(CPU& cpu, uint16_t operand) {
     // Jump instructions
     _t("") if (should_jump<opcode>(cpu)) cpu.jump(operand);
 
-    // Update flags
-    _t("") cpu.update_flags(buffer);
-
     return buffer;
 }
 
 template<uint8_t opcode>
 constexpr void opcode_impl(CPU& cpu) {
+    // Fetch operand
     uint16_t operand = get_operand<opcode>(cpu);
+    // Do calculations/main part
     uint16_t result = do_logic<opcode>(cpu, operand);
+    // Update the required flags
+    update_flags<opcode>(cpu, result);
+    // Save calculated value
     store_result<opcode>(cpu, result);
+    // Increase pc and update cycles
     update_stats<opcode>(cpu);
 }
 

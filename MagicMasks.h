@@ -1,6 +1,11 @@
 #pragma once
 
 /*
+ * Contains 256 Bit Base64 bitmaps
+ * Use ./scripts/opmask.py to generate them
+ */
+
+/*
  *  Operand masks
  */
 

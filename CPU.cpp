@@ -2,24 +2,6 @@
 #include "ByteManip.h"
 #include "OpcodeImpl.h"
 
-void CPU::update_flags(uint16_t value) {
-    auto calc_parity = [](uint8_t val) constexpr {
-        uint8_t tmp = 0;
-
-        tmp = val ^ (val >> 1);
-        tmp = tmp ^ (tmp >> 2);
-        tmp = tmp ^ (tmp >> 4);
-
-        return tmp & 1;
-    };
-
-    flags.zero = (value & 0xff) == 0;
-    flags.sign = (value & 0x80) == 0;
-    flags.parity = calc_parity(value & 0xff);
-    flags.carry = (value > 0xff);
-    flags.auxCarry = 0; // TODO
-}
-
 void CPU::jump(uint16_t addr) {
     pc = addr;
     jump_performed = true;
