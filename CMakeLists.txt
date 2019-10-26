@@ -5,7 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(
         SOURCE_FILES
-        Cpu.cpp
+        MemoryBus.cpp
+        Registers.cpp
+        ByteManip.cpp
+        CPU.cpp
+        Shell.cpp
         main.cpp
 )
 

@@ -1,13 +1,16 @@
 #include <iostream>
 
-#include "Cpu.h"
+#include "Shell.h"
 
 int main() {
-    auto cpu = i8080::Cpu();
+    auto cpu = CPU();
+    auto shell = Shell(std::cin, std::cout, cpu);
 
-    cpu.loadProgram({0x3c, 0x3c, 0x3c, 0x07});
-    cpu.run(16);
-    std::cout << i8080::format("A: %02x\n", cpu.a());
+    try {
+        while (true) {
+            shell.execute(shell.read_line());
+        }
+    } catch (ExitShell &e) {}
 
     return 0;
 }
